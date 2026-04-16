@@ -1,7 +1,7 @@
 #include "../flash_algo.h"
 
 #ifdef STM32F10x_128
-#include "stm32f1xx.h"
+#include "stm32f10x.h"
 static struct FlashDevice const FlashDevice  =  {
    FLASH_DRV_VERS,             // Driver Version, do not modify!
    "STM32F10x Med-density Flash", // Device Name (128kB/64kB/32kB)

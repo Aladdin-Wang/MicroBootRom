@@ -5,8 +5,8 @@ typedef volatile unsigned char    vu8;
 typedef          unsigned char     u8;
 typedef volatile unsigned short   vu16;
 typedef          unsigned short    u16;
-typedef volatile unsigned long    vu32;
-typedef          unsigned long     u32;
+typedef volatile unsigned int    vu32;
+typedef          unsigned int     u32;
 
 #define M8(adr)  (*((vu8  *) (adr)))
 #define M16(adr) (*((vu16 *) (adr)))
@@ -108,12 +108,15 @@ static void DSB(void)
     #define FLASH_KEY2               0xCDEF89AB
     #define FLASH_OPTKEY1            0x08192A3B
     #define FLASH_OPTKEY2            0x4C5D6E7F
+
+#define FLASH_CR_BKER           ((u32)(  1U << 11))
+#define FLASH_CR_MER2           ((u32)(  1U << 15))
+#define FLASH_OPTR_DBANK        ((u32)(  1U << 22))
 #endif
 /* Flash Control Register definitions */
 
 #define FLASH_CR_PNB_MSK        ((u32)(0x7F <<  3))
-#define FLASH_CR_BKER           ((u32)(  1U << 11))
-#define FLASH_CR_MER2           ((u32)(  1U << 15))
+
 
 /* Flash Status Register definitions */
 
@@ -123,7 +126,7 @@ static void DSB(void)
 
 /* Flash option register definitions */
 #define FLASH_OPTR_RDP_NO       ((u32)(0xAA      ))
-#define FLASH_OPTR_DBANK        ((u32)(  1U << 22))
+
 
 static u32 GetFlashType (void)
 {

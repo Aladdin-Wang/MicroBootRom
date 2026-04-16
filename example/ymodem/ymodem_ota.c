@@ -1,5 +1,4 @@
 #include "ymodem_ota.h"
-#include <assert.h>
 
 #undef this
 #define this        (*ptThis)
@@ -10,7 +9,7 @@ uint8_t s_chQueueBuffer[1024] ;
 static uint16_t ymodem_recv_file_name(ymodem_t *ptObj, uint8_t *pchBuffer, uint16_t hwSize)
 {
     ymodem_receive_t *(ptThis) = (ymodem_receive_t *)ptObj;
-    assert(NULL != ptObj);
+
     this.wOffSet = 0;
     strcpy(this.chFileName, (char *)&pchBuffer[0]);
     this.pchFileSize = (char *)&pchBuffer[strlen(this.chFileName) + 1];
@@ -39,7 +38,6 @@ static uint16_t ymodem_recv_file_name(ymodem_t *ptObj, uint8_t *pchBuffer, uint1
 static uint16_t ymodem_recv_file_data(ymodem_t *ptObj, uint8_t *pchBuffer, uint16_t hwSize)
 {
     ymodem_receive_t *(ptThis) = (ymodem_receive_t *)ptObj;
-    assert(NULL != ptObj);
 
     uint32_t  wRemainLen = this.wFileSize - this.wOffSet;
     uint32_t  wWriteLen = hwSize;
@@ -84,14 +82,14 @@ static uint16_t ymodem_recv_file_data(ymodem_t *ptObj, uint8_t *pchBuffer, uint1
 static uint16_t ymodem_read_data(ymodem_t *ptObj, uint8_t* pchByte, uint16_t hwSize)
 {
     ymodem_receive_t *(ptThis) = (ymodem_receive_t *)ptObj;
-    assert(NULL != ptObj);
+
     return this.ptReadByte->fnGetByte(this.ptReadByte, pchByte, hwSize);;
 }
 
 static uint16_t ymodem_write_data(ymodem_t *ptObj, uint8_t* pchByte, uint16_t hwSize)
 {
     ymodem_receive_t *(ptThis) = (ymodem_receive_t *)ptObj;
-    assert(NULL != ptObj);
+
     emit(ymodem_rec_sig, ptThis,
          args(
              pchByte,
@@ -121,7 +119,7 @@ fsm_rt_t ymodem_ota_receive(ymodem_t *ptObj)
 ymodem_ota_recive_t *ymodem_ota_receive_init(ymodem_ota_recive_t *ptObj, peek_byte_t *ptReadByte)
 {
     ymodem_ota_recive_t *(ptThis) = ptObj;
-    assert(NULL != ptObj);
+
     this.tCheckAgent.pAgent = &this.tYmodemReceive.parent;
     this.tCheckAgent.fnCheck = (check_hanlder_t *)ymodem_ota_receive;
     this.tCheckAgent.ptNext = NULL;

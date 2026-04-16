@@ -16,7 +16,7 @@
 ****************************************************************************/
 
 #include "ymodem.h"
-#include <assert.h>
+
 #define SOH            0x01  //!< Start of 128-byte data packet
 #define STX            0x02  //!< Start of 1024-byte data packet
 #define EOT            0x04  //!< End of transmission
@@ -128,7 +128,7 @@ static ymodem_state_t ymodem_read_data_with_timeout(ymodem_read_timeout_t *ptThi
 {
     /* Macro to reset the finite state machine (FSM) */
 #define YMODEM_READ_DATA_TIMEOUT_RESET_FSM() do { this.chState = 0; } while(0)
-    assert(NULL != ptThis);
+  
     ymodem_t *ptObj = container_of(ptThis, ymodem_t, tReadDataTimeout);
     /* Enum defining FSM states for receiving a Ymodem packet */
     enum { START, READ_DOING, IS_TIMEOUT, RESET_TIME};
@@ -187,7 +187,7 @@ static ymodem_state_t ymodem_receive_package(ymodem_package_t *ptThis, uint8_t c
 {
     /* Macro to reset the finite state machine (FSM) */
 #define YMODEM_RECEIVE_PACKAGE_RESET_FSM() do { this.chState = 0; } while(0)
-    assert(NULL != ptThis);
+ 
     ymodem_t *ptObj = container_of(ptThis, ymodem_t, tPackage);
     /* Enum defining FSM states for receiving a Ymodem packet */
     enum { START, READ_HEAD, READ_BLK, READ_NBLK, READ_DATA, READ_CHECK_L, READ_CHECK_H, CHECK_PACKAGE };
@@ -279,7 +279,7 @@ static ymodem_state_t ymodem_receive_package(ymodem_package_t *ptThis, uint8_t c
 
         case READ_DATA: {
             /* Read the actual data contained within the Ymodem packet. */
-            ymodem_state_t tFsm = ymodem_read_data_with_timeout(&ptObj->tReadDataTimeout, __get_buffer_addr(ptObj), __get_size(ptObj), DLY_10S);
+            ymodem_state_t tFsm = ymodem_read_data_with_timeout(&ptObj->tReadDataTimeout, __get_buffer_addr(ptObj), __get_size(ptObj), DLY_3S);
 
             if(STATE_PACKET_CPL == tFsm) {
                 /* Data read complete, compute CRC check for validation. */
@@ -381,7 +381,7 @@ ymodem_state_t ymodem_receive(ymodem_t *ptThis)
 {
     /* Macro to reset the finite state machine (FSM) */
 #define YMODEM_RECEIVE_RESET_FSM()    do{this.chState = 0;}while(0)
-    assert(NULL != ptThis);
+   
     /* Enum defining FSM states for receiving */
     enum { START = 0, SEND_C1, RECEIVE_PACK_PATH, SEND_ACK, SEND_C2, RECEIVE_PACK_DATA, SEND_ANSWER, ANSWER_NAK, RECIVE_EOT, ANSWER_ACK};
 
@@ -640,7 +640,7 @@ static ymodem_state_t ymodem_send_package(ymodem_package_t *ptThis, uint8_t chPa
 {
     /* Macro to reset the Ymodem send package finite state machine (FSM) */
 #define YMODEM_SEND_PACKAGE_RESET_FSM() do{this.chState = 0;}while(0)
-    assert(NULL != ptThis);
+   
     ymodem_t *ptObj = container_of(ptThis, ymodem_t, tPackage);
     /* Enum defining FSM states for sending a Ymodem packet */
     enum { START = 0, SEND_HEAD, SEND_BLK, SEND_NBLK, SEND_DATA, SEND_CHECK_L, SEND_CHECK_H};
@@ -765,7 +765,7 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
 {
     /* Define macro to reset the FSM state of Ymodem send operation */
 #define YMODEM_SEND_RESET_FSM()    do{this.chState = 0;}while(0)
-    assert(NULL != ptThis);
+   
     /* Enumeration of the FSM states */
     enum {
         START = 0,
@@ -1127,8 +1127,7 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
 void ymodem_init(ymodem_t *ptThis, ymodem_ops_t *ptOps)
 {
     /* Validate all the input pointers to ensure they are not NULL. */
-    assert(NULL != ptThis);
-    assert(NULL != ptOps);
+
     this.chState = 0;
     /* Assign the provided callback functions to the operations member of the ymodem structure. */
     memcpy(&this.tOps, ptOps, sizeof(this.tOps));
