@@ -60,6 +60,7 @@ extern_simple_fsm(check_use_peek,
             uint8_t chByte;
     )
 )
+extern void check_use_peek_task(fsm_check_use_peek_t *pfsmCheckUsePeek);
 extern peek_byte_t *get_read_byte_interface(fsm_check_use_peek_t *ptObj);
 extern bool agent_register(fsm_check_use_peek_t *ptObj,check_agent_t *ptNewItem);
 extern bool agent_unregister(fsm_check_use_peek_t *ptObj,check_agent_t *ptNote);

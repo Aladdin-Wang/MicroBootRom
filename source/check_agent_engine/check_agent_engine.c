@@ -100,6 +100,12 @@ fsm_implementation(check_use_peek)
         body_end();
     }
 
+
+void check_use_peek_task(fsm_check_use_peek_t *pfsmCheckUsePeek)
+{
+    call_fsm( check_use_peek,  pfsmCheckUsePeek);	
+}
+	
 peek_byte_t *get_read_byte_interface(fsm_check_use_peek_t *ptObj)
 {
     __fsm_check_use_peek_t *ptThis = (__fsm_check_use_peek_t *)ptObj;

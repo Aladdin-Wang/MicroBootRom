@@ -108,15 +108,20 @@ static void DSB(void)
     #define FLASH_KEY2               0xCDEF89AB
     #define FLASH_OPTKEY1            0x08192A3B
     #define FLASH_OPTKEY2            0x4C5D6E7F
-
-#define FLASH_CR_BKER           ((u32)(  1U << 11))
-#define FLASH_CR_MER2           ((u32)(  1U << 15))
-#define FLASH_OPTR_DBANK        ((u32)(  1U << 22))
 #endif
 /* Flash Control Register definitions */
-
+#if !defined  FLASH_CR_PNB_MSK
 #define FLASH_CR_PNB_MSK        ((u32)(0x7F <<  3))
-
+#endif
+#if !defined  FLASH_CR_BKER
+#define FLASH_CR_BKER           ((u32)(  1U << 11))
+#endif
+#if !defined  FLASH_CR_MER2
+#define FLASH_CR_MER2           ((u32)(  1U << 15))
+#endif
+#if !defined  FLASH_OPTR_DBANK
+#define FLASH_OPTR_DBANK        ((u32)(  1U << 22))
+#endif
 
 /* Flash Status Register definitions */
 
