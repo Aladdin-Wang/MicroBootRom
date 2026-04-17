@@ -21,8 +21,8 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 #include "stdbool.h"
-#include "../list/list.h"
-#include "../../fsm/simple_fsm.h"
+#include ".././list/list.h"
+
 
 /*============================ MACROS ========================================*/
 #define END_DEF_EPOOL(__NAME)
@@ -135,6 +135,7 @@ extern_class(pool_t,,
     void *                  pTarget;
 )
 end_extern_class(pool_t)
+
 
 typedef void pool_item_init_event_handler_t(void *pTarget, 
                                             void *pItem, 

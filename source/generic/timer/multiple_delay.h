@@ -20,9 +20,10 @@
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
-
-#if USE_SERVICE_MULTIPLE_DELAY == ENABLED
+#include "../.././fsm/simple_fsm.h"
 #include "../epool/epool.h"
+
+
 /*============================ MACROS ========================================*/
 
 #define MULTIPLE_DELAY_CFG(__ADDR, ...)                 \
@@ -59,7 +60,7 @@ typedef void timeout_event_handler_t(multiple_delay_report_status_t tStatus, voi
 //! @{
 declare_class(multiple_delay_item_t)
 extern_class(multiple_delay_item_t,
-    which(implement(__single_list_node_t)),                                     //!< list pointer
+    __single_list_node_t tNode;                                     //!< list pointer
     uint32_t wTargetTime;                                                       //!< timeout target time
     multiple_delay_request_priority_t tPriority;                                //!< request priority
     void *pTag;                                                                 //!< object passed to timeout event handler
@@ -108,13 +109,17 @@ extern_class(multiple_delay_t,
 )    
 end_extern_class(multiple_delay_t)
 //! @}
+//! @{
+
 
 typedef struct {
     union {
-        mem_block_t;
-        mem_block_t tHeapBuffer;
+        uint8_t *pchBuffer;         //!< stream buffer
+        uint8_t *pchSrc;
+        void *pObj;
     };
-}multiple_delay_cfg_t;
+    int_fast32_t nSize;             //!< stream size
+} multiple_delay_cfg_t;
 
 def_interface(i_multiple_delay_t)
     bool        (*Init)            (multiple_delay_t *, multiple_delay_cfg_t *);
@@ -139,5 +144,5 @@ end_def_interface(i_multiple_delay_t)
 extern const i_multiple_delay_t MULTIPLE_DELAY;
     
 #endif
-#endif
+
 /* EOF */

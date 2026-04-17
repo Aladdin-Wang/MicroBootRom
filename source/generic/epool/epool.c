@@ -18,11 +18,12 @@
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
-#include ".\epool.h"
+#include ".././list/list.h"
+#include "atom_code_port_default.h"
 /*============================ MACROS ========================================*/
 
 #ifndef __EPOOL_ATOM_ACCESS
-#define __EPOOL_ATOM_ACCESS(...)       SAFE_ATOM_CODE(__VA_ARGS__)
+#define __EPOOL_ATOM_ACCESS(...)       safe_atom_code(__VA_ARGS__)
 #endif
 #ifndef __EPOOL_MUTEX_TYPE
 #define __EPOOL_MUTEX_TYPE              bool
@@ -175,7 +176,6 @@ __EPOOL_MUTEX_TYPE *pool_get_mutex(pool_t *ptPool)
 void *pool_get_target(pool_t *ptPool)
 {
     class_internal(ptPool, ptThis, pool_t);
-    assert(ptPool != NULL);
     
     return this.pTarget;
 }

@@ -123,7 +123,7 @@
         <files>
 			<file category="include" name="source/"/>			
 			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 
-			<file category="header" name="template/flash_port_user.h" version="1.0.0" attr="config"/> 	
+			<file category="header" name="template/atom_code_port.h" version="1.0.0" attr="config"/> 	
 		    <file category="include" name="source/flash_algo/"/>
 			<file category="sourceC" name="source/flash_algo/flash_algo.c"/>    
             <file category="sourceC" name="example/flash/Template_FLASH_DEV.c" attr="config" version="0.9.8"/>
@@ -150,7 +150,8 @@
         <description>MicroBoot queue</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 
+            <file category="header" name="template/atom_code_port.h" version="1.0.0" attr="config"/> 			
 		    <file category="include" name="source/generic/queue/"/>
             <file category="sourceC" name="source/generic/queue/ring_queue.c"/>  
         </files>
@@ -204,8 +205,9 @@
     <component Cclass="MicroBoot" Cversion="1.0.0" Csub="multiple_delay" Cgroup="components" condition="multiple_delay">
         <description>MicroBoot multiple_delay</description>
         <files>
-			<file category="include" name="source/"/>			
+			<file category="include" name="source/"/>	
 			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 
+			<file category="header" name="template/atom_code_port.h" version="1.0.0" attr="config"/> 
 		    <file category="include" name="source/generic/list/"/>
             <file category="sourceC" name="source/generic/list/list.c"/>			
 		    <file category="include" name="source/generic/epool/"/>

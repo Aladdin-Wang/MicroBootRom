@@ -19,6 +19,7 @@
 #define _USE_TEMPLATE_LIST_H_
 
 /*============================ INCLUDES ======================================*/
+#include "../.././fsm/ooc.h"
 /*============================ MACROS ========================================*/
 #define END_DEF_LIST(__NAME)
 #define END_DEF_SAFE_LIST(__NAME)

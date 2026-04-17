@@ -17,13 +17,10 @@
 
 
 /*============================ INCLUDES ======================================*/
-#ifdef __STORE_ENVIRONMENT_CFG_IN_HEADER_FILE__
-#include "environment_cfg.h"
-#endif
 
+#include "stdbool.h"
+#include "../.././fsm/ooc.h"
 
-#include "..\compiler.h"
-#include "..\ooc.h"
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
