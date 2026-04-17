@@ -67,12 +67,15 @@
 		</condition> 
 		<condition id="subscribe_publish">
 		  <description>MicroBoot subscribe_publish</description>
+		  <require Cclass="MicroBoot" Cgroup="components" Csub="queue"/>		  
 		</condition> 
 		<condition id="multiple_delay">
 		  <description>MicroBoot multiple_delay</description>
 		</condition> 		
 		<condition id="shell">
 		  <description>MicroBoot shell</description>
+		  <require Cclass="MicroBoot" Cgroup="components" Csub="queue"/>	
+		  <require Cclass="MicroBoot" Cgroup="components" Csub="check_agent_engine"/>		  
 		</condition> 
 		<condition id="check_agent_engine">
 		  <description>MicroBoot check_agent_engine</description>
