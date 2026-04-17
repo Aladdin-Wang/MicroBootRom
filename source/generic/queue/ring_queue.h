@@ -24,13 +24,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#ifndef __QUEUE_CFG_PORTING_INCLUDE__
-#   include "queue_port_default.h"
-#else
-#   include __QUEUE_CFG_PORTING_INCLUDE__
-#endif
-
-
 #ifdef assert
 #undef assert
 #endif

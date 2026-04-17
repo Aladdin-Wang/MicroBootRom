@@ -62,7 +62,21 @@ void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 #error "Unknown compiler!"
 #endif
 
-#define MARK_SIZE                 64
+#ifndef NOINIT_SECTION_NAME
+    #define NOINIT_SECTION_NAME ".bss.noinit"
+#endif
+
+#ifndef NOINIT
+    #define NOINIT   __attribute__((section(NOINIT_SECTION_NAME)))
+#endif
+
+#ifndef ALIGN
+    #define ALIGN(n) __attribute__((aligned(n)))
+#endif
+
+NOINIT ALIGN(8)
+user_magic_data_t  tUserMagicData;
+
 
 /**
  * @brief Array to hold magic values for bootloader operations.
@@ -70,7 +84,9 @@ void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
  * This array holds three sets of magic values used to control the behavior of the bootloader and 
  * application entry processes.
  */
+#define MARK_SIZE                 64
 static uint8_t chBootMagic[3][MARK_SIZE];
+
 /**
  * @brief Structure to hold bootloader operations.
  * 
@@ -176,7 +192,7 @@ void begin_download(void)
     memset(chBootMagic, 0X55, sizeof(chBootMagic));
     target_flash_init(APP_PART_ADDR);	
     target_flash_erase(APP_PART_ADDR + APP_PART_SIZE - (3*MARK_SIZE), 3*MARK_SIZE);
-    target_flash_write((APP_PART_ADDR + APP_PART_SIZE - (3*MARK_SIZE) - 2 * (USER_DATA_SIZE)), tUserData.msg_data.B, USER_DATA_SIZE);
+    target_flash_write((APP_PART_ADDR + APP_PART_SIZE - (3*MARK_SIZE) - 2 * (USER_DATA_SIZE)), tUserMagicData.msg_data.B, USER_DATA_SIZE);
     target_flash_write((APP_PART_ADDR + APP_PART_SIZE - (2*MARK_SIZE)), chBootMagic[1], MARK_SIZE);
     target_flash_uninit(APP_PART_ADDR);
 }
@@ -200,12 +216,42 @@ void finalize_download(void)
     target_flash_write((APP_PART_ADDR + APP_PART_SIZE - 3*MARK_SIZE), chBootMagic[0], MARK_SIZE);
     target_flash_uninit(APP_PART_ADDR);
 }
+
+/**
+ * @brief Clear all magic flags and force boot into application.
+ * 
+ * This function erases the magic flag region at the end of the application
+ * partition to remove any bootloader control flags. By clearing all magic
+ * values (setting them to erased state, typically 0xFF), the bootloader
+ * will treat the system as having no pending upgrade or special condition,
+ * and will directly jump to the application.
+ * 
+ * Memory Layout After Execution:
+ * |    Distribution    |      UserData Backup  |      UserData         | Magic1    | Magic2    | Magic3    |
+ * |--------------------|-----------------------|-----------------------|-----------|-----------|-----------|
+ * | finalize_download  |      XXXX...     |      XXXX...          | XXXX| XXXX|    XXXX   |
+ */
+__attribute__((weak))
+bool clear_magic_enter_app(void)
+{
+    target_flash_init(APP_PART_ADDR);	
+    target_flash_erase(APP_PART_ADDR + APP_PART_SIZE - (3*MARK_SIZE), 3*MARK_SIZE);
+    target_flash_uninit(APP_PART_ADDR);
+	#ifdef __riscv
+	modify_stack_pointer_and_start_app((APP_PART_ADDR + APP_PART_OFFSET));
+	#else
+	modify_stack_pointer_and_start_app(*(volatile uint32_t *)APP_PART_ADDR,
+									   (*(volatile uint32_t *)(APP_PART_ADDR + APP_PART_OFFSET)));
+	#endif	
+    return false;
+}
+
+
 /**
  * @brief User data structure.
  * 
  * This structure holds the user data that will be manipulated and stored in flash memory.
  */
-user_data_t  tUserData;
 
 __attribute__((weak))
 bool user_enter_bootloader(void)
@@ -213,6 +259,9 @@ bool user_enter_bootloader(void)
 
     return false;
 }
+
+
+
 /**
  * @brief Entry point for application mode.
  * 
@@ -232,7 +281,7 @@ static void enter_application(void)
     do {
         // User-defined conditions for entering the bootloader
         if(user_enter_bootloader()){
-            target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - USER_DATA_SIZE), tUserData.msg_data.B, USER_DATA_SIZE);
+            target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - USER_DATA_SIZE), tUserMagicData.msg_data.B, USER_DATA_SIZE);
             break;			
         }
         // Read the magic values from flash memory to determine the next action
@@ -240,13 +289,13 @@ static void enter_application(void)
 
         // Check if Magic3 is 0x55, indicating to read user data from a specific location
         if ((0X55555555 == *(uint32_t *)&chBootMagic[2]) || (0 == *(uint32_t *)&chBootMagic[2])) {
-            target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - USER_DATA_SIZE), tUserData.msg_data.B, USER_DATA_SIZE);
+            target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - USER_DATA_SIZE), tUserMagicData.msg_data.B, USER_DATA_SIZE);
             break;
         }
 
         // Check if Magic2 is 0x00 and Magic1 is 0xFFFFFFFF, indicating to read user data from a different location
         if ((0X55555555 == *(uint32_t *)&chBootMagic[1]) && (0X55555555 != *(uint32_t *)&chBootMagic[0])) {
-            target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - 2 * USER_DATA_SIZE), tUserData.msg_data.B, USER_DATA_SIZE);
+            target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - 2 * USER_DATA_SIZE), tUserMagicData.msg_data.B, USER_DATA_SIZE);
             break;
         }
          		

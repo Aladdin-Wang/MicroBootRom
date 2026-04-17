@@ -18,7 +18,7 @@
 #ifndef __SERVE_MSG_CHECK_STR_H_
 #define __SERVE_MSG_CHECK_STR_H_
 #include "./app_cfg.h"
-#if defined(USING_MSG_MAP)
+
 #include "../.././fsm/simple_fsm.h"
 #include "msg_get_byte.h"
 #include <string.h>
@@ -45,5 +45,5 @@ extern_simple_fsm(check_string,
 #ifdef __cplusplus
 }
 #endif
-#endif 
+
 #endif 

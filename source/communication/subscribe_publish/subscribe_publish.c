@@ -16,7 +16,7 @@
 ****************************************************************************/
 
 #include "subscribe_publish.h"
-#if defined(USING_SUBSCRIBE_PUBLISH)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -94,5 +94,5 @@ static uint16_t get_byte (get_byte_t *ptThis, uint8_t *pchByte, uint16_t hwLengt
     return peek_queue(ptThis->pTarget, pchByte, hwLength);
 }
 
-#endif
+
 

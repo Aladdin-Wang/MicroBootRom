@@ -16,7 +16,7 @@
 ****************************************************************************/
 
 #include "signals_slots.h"
-#if defined(USING_SIGNALS_SLOTS)
+
 /*
  * Function: bool direct_connect(sig_slot_t *ptSender, const char *pchSignal, void *pReceiver, void *pMethod)
  * Description: Connects a signal to a slot function in a signal-slot system.
@@ -150,4 +150,4 @@ void auto_disconnect(sig_slot_t *ptSender, const char *pchSignal, void *pReceive
 }
 
 
-#endif
+

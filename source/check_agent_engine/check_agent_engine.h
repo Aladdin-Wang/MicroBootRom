@@ -18,7 +18,7 @@
 #ifndef __SERVE_CHECK_AGENT_ENGINE_H_
 #define __SERVE_CHECK_AGENT_ENGINE_H_
 #include "./app_cfg.h"
-#if USE_SERVICE_CHECK_USE_PEEK == ENABLED
+
 #include "../generic/queue/ring_queue.h"
 #include "../fsm/simple_fsm.h"
 
@@ -69,5 +69,5 @@ extern bool agent_unregister(fsm_check_use_peek_t *ptObj,check_agent_t *ptNote);
 }
 #endif
 
-#endif
+
 #endif /* APPLICATIONS_CHECK_USE_PEEK_H_ */

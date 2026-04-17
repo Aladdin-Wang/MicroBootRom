@@ -18,7 +18,7 @@
 #ifndef __SERVE_MSG_MAP_H_
 #define __SERVE_MSG_MAP_H_
 #include "./app_cfg.h"
-#if defined(USING_MSG_MAP)
+
 #include "msg_check_str.h"
 #include "msg_check_arg.h"
 
@@ -80,7 +80,7 @@ extern_simple_fsm(search_msg_map,
 #ifdef __cplusplus
 }
 #endif
-#endif
+
 #endif /* MSG_MAP_MSG_MAP_H_ */
 
 

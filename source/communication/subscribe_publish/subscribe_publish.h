@@ -18,7 +18,7 @@
 #ifndef __SERVE_SUBSCRIBE_AND_PUBLISH_H_
 #define __SERVE_SUBSCRIBE_AND_PUBLISH_H_
 #include "./app_cfg.h"
-#if defined(USING_SUBSCRIBE_PUBLISH)
+
 #include "../msg_map/msg_map.h"
 #include "../signals_slots/signals_slots.h"
 #include "../../generic/queue/ring_queue.h"
@@ -411,7 +411,7 @@ extern void wl_subscribe_publish_exec(wl_subscribe_publish_t *ptObj);
 #ifdef __cplusplus
 }
 #endif
-#endif
+
 #endif /* MSG_MAP_MSG_MAP_H_ */
 
 

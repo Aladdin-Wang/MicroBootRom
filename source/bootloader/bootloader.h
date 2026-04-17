@@ -13,20 +13,20 @@ typedef struct {
     char chHardWareVersion[16];
     char chSoftBootVersion[16];
     char chSoftAppVersion[16];
-    char chReceive[128];	
+    int wEnterBootMagic;	
 } msgSig_t;
 typedef struct {
     union {
         msgSig_t sig;
         uint8_t B[USER_DATA_SIZE];
     } msg_data;
-} user_data_t;
+} user_magic_data_t;
 
-extern user_data_t tUserData;
+extern user_magic_data_t tUserMagicData;
 extern void enter_bootloader(uint8_t *pchDate, uint16_t hwLength);
 extern void begin_download(void);
 extern void finalize_download(void);
-
+extern bool clear_magic_enter_app(void);
 #endif
 
 

@@ -18,7 +18,7 @@
 #ifndef __SERVE_SIGNALS_SLOTS_H_
 #define __SERVE_SIGNALS_SLOTS_H_
 #include ".\app_cfg.h"
-#if defined(USING_SIGNALS_SLOTS)
+
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
@@ -196,5 +196,5 @@ bool direct_connect(sig_slot_t *ptSender, const char *pchSignal, void *pReceiver
  * Returns: void
  */
 void auto_disconnect(sig_slot_t *ptSender, const char *pchSignal, void *pReceiver, void *pMethod);
-#endif
+
 #endif /* QUEUE_QUEUE_H_ */

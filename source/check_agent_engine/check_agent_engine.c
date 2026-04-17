@@ -17,7 +17,7 @@
 
 #include "check_agent_engine.h"
 #include <string.h>
-#if USE_SERVICE_CHECK_USE_PEEK == ENABLED
+
 static uint16_t peek_byte (peek_byte_t *ptThis,uint8_t *pchByte, uint16_t hwLength);
 def_simple_fsm( check_use_peek,
     def_params(
@@ -158,4 +158,4 @@ static uint16_t peek_byte (peek_byte_t *ptThis,uint8_t *pchByte, uint16_t hwLeng
     return peek_queue(ptThis->pTarget,pchByte,hwLength);
 }
 
-#endif
+

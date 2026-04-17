@@ -17,7 +17,7 @@
 
 #include "micro_shell.h"
 
-#if defined(WL_USING_SHELL)
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -299,4 +299,3 @@ static void shell_push_history(wl_shell_t *ptObj)
     this.hwCurrenthistory = this.hwHistoryCount;
 }
 
-#endif

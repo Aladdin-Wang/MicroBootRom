@@ -18,7 +18,7 @@
 #ifndef __SERVE_SHELL_H_
 #define __SERVE_SHELL_H_
 #include "./app_cfg.h"
-#if defined(WL_USING_SHELL)
+
 
 #include "../signals_slots/signals_slots.h"
 #include "../../generic/queue/ring_queue.h"
@@ -145,5 +145,5 @@ extern check_shell_t *shell_init(check_shell_t *ptObj, shell_ops_t *ptOps);
 extern wl_shell_t *shell_console_get(void);
 extern void shell_console_set(wl_shell_t *ptConsoleShell);
 extern void shell_printf(const char *format, ...);
-#endif
+
 #endif /* APPLICATIONS_CHECK_AGENT_XMODEM_H_ */

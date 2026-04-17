@@ -16,7 +16,7 @@
 ****************************************************************************/
 
 #include "msg_check_str.h"
-#if defined(USING_MSG_MAP)
+
 def_simple_fsm( check_string,
     def_params(
             const char *pchStr;
@@ -71,6 +71,6 @@ fsm_implementation(  check_string )
     body_end();
 }
 
-#endif
+
 
 

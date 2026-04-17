@@ -16,7 +16,7 @@
 ****************************************************************************/
 
 #include "msg_check_arg.h"
-#if defined(USING_MSG_MAP)
+
 #include <string.h>
 def_simple_fsm( check_arg,
     def_params(
@@ -138,4 +138,4 @@ fsm_implementation(  check_arg )
     }
     body_end();
 }
-#endif
+

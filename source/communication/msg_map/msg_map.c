@@ -16,7 +16,7 @@
 ****************************************************************************/
 
 #include "msg_map.h"
-#if defined(USING_MSG_MAP)
+
 #include <string.h>
 
 def_simple_fsm( search_msg_map,
@@ -123,4 +123,3 @@ fsm_implementation(search_msg_map)
     body_end();
 }
 
-#endif
