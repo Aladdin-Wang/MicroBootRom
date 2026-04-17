@@ -68,6 +68,9 @@
 		<condition id="subscribe_publish">
 		  <description>MicroBoot subscribe_publish</description>
 		</condition> 
+		<condition id="multiple_delay">
+		  <description>MicroBoot multiple_delay</description>
+		</condition> 		
 		<condition id="shell">
 		  <description>MicroBoot shell</description>
 		</condition> 
@@ -87,8 +90,8 @@
         <description>MicroBoot flash drive</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="0.9.9" attr="config"/> 
-			<file category="header" name="template/flash_port_user.h" version="0.9.9" attr="config"/> 
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 
+			<file category="header" name="template/flash_port_user.h" version="1.0.0" attr="config"/> 
 		    <file category="include" name="source/flash_algo/"/>	
 			<file category="sourceC" name="source/flash_algo/flash_algo.c"/>    
 			<file category="sourceC" name="source/flash_algo/flash/STM32_FLASH_DEV.c"/>        
@@ -103,8 +106,8 @@
         <description>MicroBoot flash drive</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="0.9.8" attr="config"/> 
-			<file category="header" name="template/flash_port_user.h" version="0.9.8" attr="config"/> 
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 
+			<file category="header" name="template/flash_port_user.h" version="1.0.0" attr="config"/> 
 		    <file category="include" name="source/flash_algo/"/>
 			<file category="sourceC" name="source/flash_algo/flash_algo.c"/>    
 			<file category="sourceC" name="source/flash_algo/flash/GD32_FLASH_DEV.c"/>        
@@ -159,7 +162,7 @@
         <description>MicroBoot signals_slots</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="0.9.8" attr="config"/> 		
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
 		    <file category="include" name="source/communication/signals_slots/"/>
             <file category="sourceC" name="source/communication/signals_slots/signals_slots.c"/> 
         </files>
@@ -187,7 +190,7 @@
         <description>MicroBoot subscribe_publish</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="0.9.8" attr="config"/> 		
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
 		    <file category="include" name="source/communication/subscribe_publish/"/>
             <file category="sourceC" name="source/communication/subscribe_publish/subscribe_publish.c"/>
 			<file category="sourceC" name="source/communication/msg_map/msg_check_arg.c"/>
@@ -198,6 +201,20 @@
 #define __USER_APP_CFG_H__ "user_app_cfg.h"
          </Pre_Include_Global_h>			
     </component>		
+    <component Cclass="MicroBoot" Cversion="1.0.0" Csub="multiple_delay" Cgroup="components" condition="multiple_delay">
+        <description>MicroBoot multiple_delay</description>
+        <files>
+			<file category="include" name="source/"/>			
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
+		    <file category="include" name="source/generic/epool/"/>
+            <file category="sourceC" name="source/generic/epool/epool.c"/>
+		    <file category="include" name="source/generic/timer/"/>
+            <file category="sourceC" name="source/generic/timer/multiple_delay.c"/>			
+        </files>
+		 <Pre_Include_Global_h>
+#define __USER_APP_CFG_H__ "user_app_cfg.h"
+         </Pre_Include_Global_h>			
+    </component>	
     <component Cclass="MicroBoot" Cversion="1.0.0" Csub="Bootloader" Cgroup="components" condition="Bootloader">
         <description>MicroBoot bootloader</description>
         <files>
@@ -234,7 +251,6 @@
     <component Cclass="MicroBoot" Cversion="1.0.0" Csub="ymodem_ota" Cgroup="example" condition="ymodem_ota">
         <description>MicroBoot check_agent_engine</description>
         <files>
-		    <file category="include" name="example/ymodem/intelhex/"/>
 			<file category="include" name="example/ymodem/"/>
             <file category="sourceC" name="example/ymodem/ymodem_ota.c" attr="config" version="1.0.0"/>
 			<file category="header" name="example/ymodem/ymodem_ota.h" attr="config" version="1.0.0"/>
