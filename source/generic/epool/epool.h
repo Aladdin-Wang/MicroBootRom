@@ -20,6 +20,9 @@
 
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
+#include "stdbool.h"
+#include "../list/list.h"
+#include "../../fsm/simple_fsm.h"
 
 /*============================ MACROS ========================================*/
 #define END_DEF_EPOOL(__NAME)

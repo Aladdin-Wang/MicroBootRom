@@ -205,7 +205,9 @@
         <description>MicroBoot multiple_delay</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 
+		    <file category="include" name="source/generic/list/"/>
+            <file category="sourceC" name="source/generic/list/list.c"/>			
 		    <file category="include" name="source/generic/epool/"/>
             <file category="sourceC" name="source/generic/epool/epool.c"/>
 		    <file category="include" name="source/generic/timer/"/>

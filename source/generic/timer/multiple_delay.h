@@ -22,7 +22,7 @@
 #include ".\app_cfg.h"
 
 #if USE_SERVICE_MULTIPLE_DELAY == ENABLED
-#include "..\epool\epool.h"
+#include "../epool/epool.h"
 /*============================ MACROS ========================================*/
 
 #define MULTIPLE_DELAY_CFG(__ADDR, ...)                 \

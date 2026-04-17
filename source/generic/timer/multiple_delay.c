@@ -20,8 +20,8 @@
 #if USE_SERVICE_MULTIPLE_DELAY == ENABLED
 
 #include <string.h>
-#include "..\epool\epool.h"
-#include "./multiple_delay.h"
+#include "../epool/epool.h"
+#include "multiple_delay.h"
 
 /*============================ MACROS ========================================*/
 
