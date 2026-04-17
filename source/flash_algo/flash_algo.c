@@ -15,7 +15,7 @@
 *                                                                           *
 ****************************************************************************/
 #include "flash_algo.h"
-
+#include "atom_code_port.h"
 /* Array containing flash devices and their configurations */
 static const flash_algo_t * const flash_table[] = FLASH_DEV_TABLE;
 

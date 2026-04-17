@@ -18,7 +18,7 @@
 #ifndef __SERVE_QUEUE_H_
 #define __SERVE_QUEUE_H_
 #include ".\app_cfg.h"
-#if defined(USING_RINGEQUEUE)
+
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
@@ -270,5 +270,4 @@ uint16_t get_queue_available_count(byte_queue_t *ptObj);
 #undef __BYTE_QUEUE_CLASS_INHERIT__
 #undef __BYTE_QUEUE_CLASS_IMPLEMENT__
 
-#endif
 #endif /* QUEUE_QUEUE_H_ */

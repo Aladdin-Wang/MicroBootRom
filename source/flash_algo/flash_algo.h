@@ -29,30 +29,6 @@
 #   include __FLASH_CFG_PORTING_INCLUDE__
 #endif
 
-#undef __CONNECT2
-#undef CONNECT2
-#undef __CONNECT3
-#undef CONNECT3
-
-#define __CONNECT3(__A, __B, __C)         __A##__B##__C
-#define __CONNECT2(__A, __B)              __A##__B
-
-#define CONNECT3(__A, __B, __C)           __CONNECT3(__A, __B, __C)
-#define CONNECT2(__A, __B)                __CONNECT2(__A, __B)
-
-#ifndef SAFE_NAME
-    #define SAFE_NAME(__NAME)   CONNECT3(__,__NAME,__LINE__)
-#endif
-#ifndef safe_atom_code
-      #define safe_atom_code()                                         \
-              for(  uint32_t SAFE_NAME(temp) =                          \
-                          ({uint32_t SAFE_NAME(temp2)=flash_port_disable_global_interrupt();  \
-                       SAFE_NAME(temp2);}),*SAFE_NAME(temp3) = NULL;    \
-                       SAFE_NAME(temp3)++ == NULL;                      \
-                      flash_port_resume_global_interrupt(SAFE_NAME(temp)))				 					
-#endif
-
-
 
 #define VERS       1           // Interface Version 1.01
 
