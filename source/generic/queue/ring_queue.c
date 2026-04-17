@@ -17,7 +17,7 @@
 
 #define __BYTE_QUEUE_CLASS_IMPLEMENT__
 #include "ring_queue.h"
-
+#include "atom_code_port.h"
 #if defined(USING_RINGEQUEUE)
 #undef this
 #define this        (*ptThis)

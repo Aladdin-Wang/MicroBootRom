@@ -19,7 +19,7 @@
 /*============================ INCLUDES ======================================*/
 #include ".\app_cfg.h"
 #include ".././list/list.h"
-#include "atom_code_port_default.h"
+#include "atom_code_port.h"
 /*============================ MACROS ========================================*/
 
 #ifndef __EPOOL_ATOM_ACCESS

@@ -51,32 +51,6 @@ if (!(EXPR))                                                                   \
 
 #include "..\..\plooc\plooc_class.h"
 
-#undef __CONNECT2
-#undef CONNECT2
-#undef __CONNECT3
-#undef CONNECT3
-
-#define __CONNECT3(__A, __B, __C)         __A##__B##__C
-#define __CONNECT2(__A, __B)              __A##__B
-
-#define CONNECT3(__A, __B, __C)           __CONNECT3(__A, __B, __C)
-#define CONNECT2(__A, __B)                __CONNECT2(__A, __B)
-
-#ifndef SAFE_NAME
-#define SAFE_NAME(__NAME)   CONNECT3(__,__NAME,__LINE__)
-#endif
-
-#ifndef safe_atom_code
-      #define safe_atom_code()                                         \
-              for(  uint32_t SAFE_NAME(temp) =                          \
-                          ({uint32_t SAFE_NAME(temp2)=queue_port_disable_global_interrupt();  \
-                       SAFE_NAME(temp2);}),*SAFE_NAME(temp3) = NULL;    \
-                       SAFE_NAME(temp3)++ == NULL;                      \
-                      queue_port_resume_global_interrupt(SAFE_NAME(temp)))				 					
-#endif
-
-
-
 #define __DEQUEUE_0( __QUEUE, __ADDR)                                \
     dequeue_bytes((__QUEUE), (__ADDR),(sizeof(typeof(*(__ADDR)))))
 

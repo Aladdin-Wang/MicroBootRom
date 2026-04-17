@@ -19,7 +19,7 @@
 #include ".\app_cfg.h"
 #include <string.h>
 #include "multiple_delay.h"
-#include "atom_code_port_default.h"
+#include "atom_code_port.h"
 /*============================ MACROS ========================================*/
 
 #ifndef this
