@@ -8,12 +8,23 @@
 //  <i>Default: 192
 #define USER_DATA_SIZE            192
 
+#ifndef NOINIT_SECTION_NAME
+    #define NOINIT_SECTION_NAME ".bss.noinit"
+#endif
+
+#ifndef NOINIT
+    #define NOINIT   __attribute__((section(NOINIT_SECTION_NAME)))
+#endif
+
+#ifndef ALIGN
+    #define ALIGN(n) __attribute__((aligned(n)))
+#endif
+
 typedef struct {
     char chProjectName[16];
     char chHardWareVersion[16];
     char chSoftBootVersion[16];
-    char chSoftAppVersion[16];
-    int wEnterBootMagic;	
+    char chSoftAppVersion[16];	
 } msgSig_t;
 typedef struct {
     union {

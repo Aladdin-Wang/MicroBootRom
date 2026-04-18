@@ -62,17 +62,7 @@ void modify_stack_pointer_and_start_app(uint32_t r0_sp, uint32_t r1_pc)
 #error "Unknown compiler!"
 #endif
 
-#ifndef NOINIT_SECTION_NAME
-    #define NOINIT_SECTION_NAME ".bss.noinit"
-#endif
 
-#ifndef NOINIT
-    #define NOINIT   __attribute__((section(NOINIT_SECTION_NAME)))
-#endif
-
-#ifndef ALIGN
-    #define ALIGN(n) __attribute__((aligned(n)))
-#endif
 
 NOINIT ALIGN(8)
 user_magic_data_t  tUserMagicData;
