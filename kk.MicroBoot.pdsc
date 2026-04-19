@@ -22,6 +22,7 @@
     </release>
     <release date="2026-04-16" version="1.1.0" tag="v1.1.0">
       Initial release of MicroBoot with updated features.	
+    </release>		  
     <release date="2026-04-16" version="1.0.0" tag="v1.0.0">
       Initial release of MicroBoot with updated features.
     </release>		
@@ -131,8 +132,8 @@
 			<file category="header" name="template/atom_code_port.h" version="1.0.0" attr="config"/> 	
 		    <file category="include" name="source/flash_algo/"/>
 			<file category="sourceC" name="source/flash_algo/flash_algo.c"/>    
-            <file category="sourceC" name="example/flash/Template_FLASH_DEV.c" attr="config" version="0.9.8"/>
-			<file category="sourceC" name="example/flash/Template_FLASH_DRV.c" attr="config" version="0.9.8"/>
+            <file category="sourceC" name="example/flash/Template_FLASH_DEV.c" attr="config" version="1.0.0"/>
+			<file category="sourceC" name="example/flash/Template_FLASH_DRV.c" attr="config" version="1.0.0"/>
         </files>
 		 <Pre_Include_Global_h>
 #define __USER_APP_CFG_H__ "user_app_cfg.h"
@@ -168,7 +169,7 @@
         <description>MicroBoot signals_slots</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="1.1.0" attr="config"/> 		
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
 		    <file category="include" name="source/communication/signals_slots/"/>
             <file category="sourceC" name="source/communication/signals_slots/signals_slots.c"/> 
         </files>
@@ -176,11 +177,11 @@
 #define __USER_APP_CFG_H__ "user_app_cfg.h"
          </Pre_Include_Global_h>			
     </component>	
-    <component Cclass="MicroBoot" Cversion="1.1.0" Csub="shell" Cgroup="components" condition="shell">
+    <component Cclass="MicroBoot" Cversion="1.0.0" Csub="shell" Cgroup="components" condition="shell">
         <description>MicroBoot shell</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="1.1.0" attr="config"/> 		
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
 		    <file category="include" name="source/communication/shell/"/>
             <file category="sourceC" name="source/communication/shell/micro_shell.c"/> 
             <file category="sourceC" name="source/communication/shell/micro_shell_cmd.c"/> 			
@@ -192,11 +193,11 @@
 #define __USER_APP_CFG_H__ "user_app_cfg.h"
          </Pre_Include_Global_h>			
     </component>	
-    <component Cclass="MicroBoot" Cversion="1.1.0" Csub="subscribe_publish" Cgroup="components" condition="subscribe_publish">
+    <component Cclass="MicroBoot" Cversion="1.0.0" Csub="subscribe_publish" Cgroup="components" condition="subscribe_publish">
         <description>MicroBoot subscribe_publish</description>
         <files>
 			<file category="include" name="source/"/>			
-			<file category="header" name="template/user_app_cfg.h" version="1.1.0" attr="config"/> 		
+			<file category="header" name="template/user_app_cfg.h" version="1.0.0" attr="config"/> 		
 		    <file category="include" name="source/communication/subscribe_publish/"/>
             <file category="sourceC" name="source/communication/subscribe_publish/subscribe_publish.c"/>
 			<file category="sourceC" name="source/communication/msg_map/msg_check_arg.c"/>
