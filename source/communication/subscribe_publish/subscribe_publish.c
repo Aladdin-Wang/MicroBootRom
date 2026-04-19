@@ -26,11 +26,11 @@
 
 static uint16_t get_byte (get_byte_t *ptThis, uint8_t *pchByte, uint16_t hwLength);
 
-wl_subscribe_publish_t *wl_subscribe_publish_init(wl_subscribe_publish_t *ptObj)
+subscribe_publish_t *subscribe_publish_init(subscribe_publish_t *ptObj)
 {
     assert(NULL != ptObj);
 
-    wl_subscribe_publish_t *(ptThis) = ptObj;
+    subscribe_publish_t *(ptThis) = ptObj;
 
     queue_init(&this.tByteInQueue, this.chQueueBuf, sizeof(this.chQueueBuf), true);
     this.tGetByte.pTarget = (void *)(&this.tByteInQueue);
@@ -66,12 +66,12 @@ wl_subscribe_publish_t *wl_subscribe_publish_init(wl_subscribe_publish_t *ptObj)
 /**
  * @brief Execute shell commands
  *
- * @param ptObj Pointer to the wl_shell_t object
+ * @param ptObj Pointer to the subscribe_publish_t object
  */
-void wl_subscribe_publish_exec(wl_subscribe_publish_t *ptObj)
+void subscribe_publish_exec(subscribe_publish_t *ptObj)
 {
     uint8_t chByte;
-    wl_subscribe_publish_t *(ptThis) = ptObj;
+    subscribe_publish_t *(ptThis) = ptObj;
     assert(NULL != ptObj);
 
     fsm_rt_t tFsm = call_fsm( search_msg_map,  &this.fsmSearchTopicMap );

@@ -16,7 +16,7 @@ void shell_printf(const char *format, ...)
 {
     int result = 0; // Variable to store the formatted output result
     bool bEarlyReturn = false; // Flag to indicate if an early return is needed
-    wl_shell_t *ptShell = shell_console_get(); // Get the shell console object
+    micro_shell_t *ptShell = shell_console_get(); // Get the shell console object
 
     if(ptShell != NULL) { // Check if ptShell is valid
         safe_atom_code() { // Enter safe atomic operation

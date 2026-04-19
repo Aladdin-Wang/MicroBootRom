@@ -26,27 +26,6 @@
 extern "C" {
 #endif
 
-/* example:
-
-  //初始化发布订阅模块
-	subscribe_publish_init(&tShellSubPub);
-	
-  //定义topic
-  def_topic( __OBJ,__TOPIC, ...)  
-  example：
-  def_topic(&tShellSubPub, echo_topic, uint8_t*, uint16_t);
-	
-  //发布topic
-  publish( __obj, __topic, ...)  
-  example：
-  publish(&tShellSubPub, __MSG_TOPIC(echo_topic), pchData, hwLength);
-
-  //订阅topic
-  subscribe( __SentObj, __topic,__RecObj, __callBack)
-  example：
-  subscribe(&tShellSubPub, __MSG_TOPIC(echo_topic), &ptObj, wl_shell_echo);
-*/
-
 /********************************************************************************************/
 #define MSG_FUNCTION_EXPORT_CMD(name, cmd, desc)                      \
     const char __vsym_##cmd##_name[] __section(".rodata.name") = #cmd;    \
@@ -69,18 +48,18 @@ extern "C" {
     MSG_FUNCTION_EXPORT_CMD(command, command, desc)
 
 
-typedef struct wl_subscribe_publish_t {
+typedef struct subscribe_publish_t {
     SIG_SLOT_OBJ;
     fsm(search_msg_map)  fsmSearchTopicMap;
     byte_queue_t         tByteInQueue;
     get_byte_t           tGetByte;
     uint8_t              chQueueBuf[MSG_ARG_LEN];
-} wl_subscribe_publish_t;
+} subscribe_publish_t;
 
 #define __MSG_TOPIC(x)   SIGNAL(x)
 
 #define __SIGNALS_0(__OBJ,__TOPIC)                             \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis);          \
+    signals(__TOPIC,subscribe_publish_t *ptThis);          \
     static int CONNECT2(__TOPIC,_fun)(int argc, char **argv) \
     {                         \
         emit(__TOPIC,__OBJ);	    \
@@ -89,7 +68,7 @@ typedef struct wl_subscribe_publish_t {
     MSG_FUNCTION_EXPORT_CMD(CONNECT2(__TOPIC,_fun),__TOPIC,__TOPIC)
 
 #define __SIGNALS_1(__OBJ,__TOPIC,__TYPE1)             \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                     __TYPE1                            \
                 ));                                    \
@@ -104,7 +83,7 @@ typedef struct wl_subscribe_publish_t {
     MSG_FUNCTION_EXPORT_CMD(CONNECT2(__TOPIC,_fun),__TOPIC,__TOPIC)
 
 #define __SIGNALS_2(__OBJ,__TOPIC,__TYPE1,__TYPE2)     \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                     __TYPE1,                            \
                     __TYPE2                              \
@@ -121,7 +100,7 @@ typedef struct wl_subscribe_publish_t {
     MSG_FUNCTION_EXPORT_CMD(CONNECT2(__TOPIC,_fun),__TOPIC,__TOPIC)
 
 #define __SIGNALS_3(__OBJ,__TOPIC,__TYPE1,__TYPE2,__TYPE3)     \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                      __TYPE1,                            \
                      __TYPE2,                              \
@@ -140,7 +119,7 @@ typedef struct wl_subscribe_publish_t {
     MSG_FUNCTION_EXPORT_CMD(CONNECT2(__TOPIC,_fun),__TOPIC,__TOPIC)
 
 #define __SIGNALS_4(__OBJ,__TOPIC,__TYPE1,__TYPE2,__TYPE3,__TYPE4)     \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                     __TYPE1,                            \
                     __TYPE2,                              \
@@ -161,7 +140,7 @@ typedef struct wl_subscribe_publish_t {
     MSG_FUNCTION_EXPORT_CMD(CONNECT2(__TOPIC,_fun),__TOPIC,__TOPIC)
 
 #define __SIGNALS_5(__OBJ,__TOPIC,__TYPE1,__TYPE2,__TYPE3,__TYPE4,__TYPE5)     \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                     __TYPE1,                            \
                     __TYPE2,                              \
@@ -185,7 +164,7 @@ typedef struct wl_subscribe_publish_t {
 
 
 #define __SIGNALS_6(__OBJ,__TOPIC,__TYPE1,__TYPE2,__TYPE3,__TYPE4,__TYPE5,__TYPE6)     \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                     __TYPE1,                            \
                     __TYPE2,                              \
@@ -210,7 +189,7 @@ typedef struct wl_subscribe_publish_t {
     MSG_FUNCTION_EXPORT_CMD(CONNECT2(__TOPIC,_fun),__TOPIC,__TOPIC)
 
 #define __SIGNALS_7(__OBJ,__TOPIC,__TYPE1,__TYPE2,__TYPE3,__TYPE4,__TYPE5,__TYPE6,__TYPE7)     \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                     __TYPE1,                            \
                     __TYPE2,                              \
@@ -237,7 +216,7 @@ typedef struct wl_subscribe_publish_t {
     MSG_FUNCTION_EXPORT_CMD(CONNECT2(__TOPIC,_fun),__TOPIC,__TOPIC)
 
 #define __SIGNALS_8(__OBJ,__TOPIC,__TYPE1,__TYPE2,__TYPE3,__TYPE4,__TYPE5,__TYPE6,__TYPE7,__TYPE8)     \
-    signals(__TOPIC,wl_subscribe_publish_t *ptThis,    \
+    signals(__TOPIC,subscribe_publish_t *ptThis,    \
             args(                                         \
                     __TYPE1,                            \
                     __TYPE2,                              \
@@ -272,12 +251,12 @@ typedef struct wl_subscribe_publish_t {
 
 
 #define __PUBLISH_TOPIC_0( __OBJ, __TOPIC)  \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)0);})
 
 #define __PUBLISH_TOPIC_1( __OBJ, __TOPIC, __DATA1)  \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)1);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -285,7 +264,7 @@ typedef struct wl_subscribe_publish_t {
 
 
 #define __PUBLISH_TOPIC_2( __OBJ, __TOPIC, __DATA1, __DATA2)  \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)2);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -295,7 +274,7 @@ typedef struct wl_subscribe_publish_t {
 
 
 #define __PUBLISH_TOPIC_3( __OBJ, __TOPIC, __DATA1, __DATA2, __DATA3) \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)3);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -307,7 +286,7 @@ typedef struct wl_subscribe_publish_t {
     })
 
 #define __PUBLISH_TOPIC_4( __OBJ, __TOPIC, __DATA1, __DATA2, __DATA3, __DATA4)  \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)4);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -321,7 +300,7 @@ typedef struct wl_subscribe_publish_t {
     })
 
 #define __PUBLISH_TOPIC_5( __OBJ, __TOPIC, __DATA1, __DATA2, __DATA3, __DATA4, __DATA5) \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)5);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -337,7 +316,7 @@ typedef struct wl_subscribe_publish_t {
     })
 
 #define __PUBLISH_TOPIC_6( __OBJ, __TOPIC, __DATA1, __DATA2, __DATA3, __DATA4, __DATA5, __DATA6) \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)6);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -355,7 +334,7 @@ typedef struct wl_subscribe_publish_t {
     })
 
 #define __PUBLISH_TOPIC_7( __OBJ, __TOPIC, __DATA1, __DATA2, __DATA3, __DATA4, __DATA5, __DATA6, __DATA7)  \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)7);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -375,7 +354,7 @@ typedef struct wl_subscribe_publish_t {
     })
 
 #define __PUBLISH_TOPIC_8( __OBJ, __TOPIC, __DATA1, __DATA2, __DATA3, __DATA4, __DATA5, __DATA6, __DATA7, __DATA8)  \
-    ({wl_subscribe_publish_t *(ptThis) = __OBJ;\
+    ({subscribe_publish_t *(ptThis) = __OBJ;\
         enqueue(&ptThis->tByteInQueue,__TOPIC,strlen(__TOPIC));\
         enqueue(&ptThis->tByteInQueue,(uint8_t)8);\
         enqueue(&ptThis->tByteInQueue,(uint16_t)sizeof(__DATA1));\
@@ -406,8 +385,8 @@ typedef struct wl_subscribe_publish_t {
 #define unsubscribe( __SentObj, __topic,__RecObj, __callBack)                \
     disconnect(__SentObj, __topic, __RecObj, __callBack);
 
-extern wl_subscribe_publish_t *wl_subscribe_publish_init(wl_subscribe_publish_t *ptObj);
-extern void wl_subscribe_publish_exec(wl_subscribe_publish_t *ptObj);
+extern subscribe_publish_t *subscribe_publish_init(subscribe_publish_t *ptObj);
+extern void subscribe_publish_exec(subscribe_publish_t *ptObj);
 #ifdef __cplusplus
 }
 #endif

@@ -24,9 +24,9 @@
 
 #undef this
 #define this        (*ptThis)
-static  wl_shell_t *s_ptConsoleShell = NULL;
-static void shell_push_history(wl_shell_t *ptObj);
-static void shell_echo(wl_shell_t *ptObj, char *pchData, uint16_t hwLength);
+static  micro_shell_t *s_ptConsoleShell = NULL;
+static void shell_push_history(micro_shell_t *ptObj);
+static void shell_echo(micro_shell_t *ptObj, char *pchData, uint16_t hwLength);
 
 __attribute__((weak))
 int64_t get_system_time_ms(void)
@@ -36,12 +36,12 @@ int64_t get_system_time_ms(void)
     return wTimeCount;
 }
 
-wl_shell_t *shell_console_get(void)
+micro_shell_t *shell_console_get(void)
 {
     return s_ptConsoleShell;
 }
 
-void shell_console_set(wl_shell_t *ptConsoleShell)
+void shell_console_set(micro_shell_t *ptConsoleShell)
 {
     s_ptConsoleShell = ptConsoleShell;
 }
@@ -51,7 +51,7 @@ static fsm_rt_t shell_read_with_timeout(shell_read_timeout_t *ptThis, char* pchB
     /* Macro to reset the finite state machine (FSM) */
 #define SHELL_READ_TIMEOUT_RESET_FSM() do { this.chState = 0; } while(0)
 
-    wl_shell_t *ptObj = container_of(ptThis, wl_shell_t, tReadDataTimeout);
+    micro_shell_t *ptObj = container_of(ptThis, micro_shell_t, tReadDataTimeout);
     /* Enum defining FSM states for receiving a Ymodem packet */
     enum { START, READ_DOING, IS_TIMEOUT};
 
@@ -97,13 +97,13 @@ static fsm_rt_t shell_read_with_timeout(shell_read_timeout_t *ptThis, char* pchB
 /**
  * @brief Read input from the shell
  *
- * @param ptObj Pointer to the wl_shell_t object
+ * @param ptObj Pointer to the micro_shell_t object
  * @param pchData Pointer to the input data
  * @param hwLength Length of the input data
  */
-static fsm_rt_t shell_readline(wl_shell_t *ptObj)
+static fsm_rt_t shell_readline(micro_shell_t *ptObj)
 {
-    wl_shell_t *(ptThis) = (wl_shell_t *)ptObj;
+    micro_shell_t *(ptThis) = (micro_shell_t *)ptObj;
 
     fsm_rt_t tFsm = shell_read_with_timeout(&ptObj->tReadDataTimeout, &this.chDate, 1, 10);
 
@@ -144,13 +144,13 @@ static fsm_rt_t shell_readline(wl_shell_t *ptObj)
 /**
  * @brief Echo shell input
  *
- * @param ptObj Pointer to the wl_shell_t object
+ * @param ptObj Pointer to the micro_shell_t object
  * @param pchData Pointer to the input data
  * @param hwLength Length of the input data
  */
-static void shell_echo(wl_shell_t *ptObj, char *pchData, uint16_t hwLength)
+static void shell_echo(micro_shell_t *ptObj, char *pchData, uint16_t hwLength)
 {
-    wl_shell_t *(ptThis) = ptObj;
+    micro_shell_t *(ptThis) = ptObj;
     for(uint16_t i = 0; i < hwLength; i++) {
         if (isdigit(this.chDate) || isalpha(this.chDate) || isspace(this.chDate) || this.chDate == '_' || this.chDate == '.'|| this.chDate == '-'
 					|| this.chDate == 0x7f || this.chDate == 0x08 ) {
@@ -172,20 +172,16 @@ static void shell_echo(wl_shell_t *ptObj, char *pchData, uint16_t hwLength)
     }
 }
 
-int msh_exec(char *cmd, size_t length)
-{
 
-    return 0;
-}
 /**
  * @brief Execute shell commands
  *
- * @param ptObj Pointer to the wl_shell_t object
+ * @param ptObj Pointer to the micro_shell_t object
  */
-static fsm_rt_t shell_agent_exec(wl_shell_t *ptObj)
+fsm_rt_t micro_shell_exec(micro_shell_t *ptObj)
 {
     uint8_t chByte;
-    wl_shell_t *(ptThis) = ptObj;
+    micro_shell_t *(ptThis) = ptObj;
 
     fsm_rt_t tFsm = call_fsm( search_msg_map,  &this.fsmSearchMsgMap );
 
@@ -212,35 +208,26 @@ static uint16_t get_byte (get_byte_t *ptThis, uint8_t *pchByte, uint16_t hwLengt
 /**
  * @brief Initialize the shell
  *
- * @param ptObj Pointer to the wl_shell_t object
- * @return wl_shell_t* Pointer to the initialized wl_shell_t object
+ * @param ptObj Pointer to the micro_shell_t object
+ * @return micro_shell_t* Pointer to the initialized micro_shell_t object
  */
-check_shell_t *shell_init(check_shell_t *ptObj, shell_ops_t *ptOps)
+micro_shell_t *shell_init(micro_shell_t *ptObj, shell_ops_t *ptOps)
 {
-    check_shell_t *(ptThis) = ptObj;
-    assert(NULL != ptOps);
-    assert(NULL != ptObj);
-    this.tCheckAgent.pAgent = &this.tshell;
-    this.tCheckAgent.fnCheck = (check_hanlder_t *)shell_agent_exec;
-    this.tCheckAgent.ptNext = NULL;
-    this.tCheckAgent.hwPeekStatus = 0;
-    this.tCheckAgent.bIsKeepingContext = true;
-
-    memcpy(&this.tshell.tOps, ptOps, sizeof(this.tshell.tOps));
-    queue_init(&this.tshell.tByteInQueue, this.tshell.chQueueInBuf, sizeof(this.tshell.chQueueInBuf), true);
-    this.tshell.tGetByte.pTarget = (void *)(&this.tshell.tByteInQueue);
-    this.tshell.tGetByte.fnGetByte = get_byte;
+    memcpy(&ptObj->tOps, ptOps, sizeof(ptObj->tOps));
+    queue_init(&ptObj->tByteInQueue, ptObj->chQueueInBuf, sizeof(ptObj->chQueueInBuf), true);
+    ptObj->tGetByte.pTarget = (void *)(&ptObj->tByteInQueue);
+    ptObj->tGetByte.fnGetByte = get_byte;
     #ifdef __ARMCC_VERSION
     extern const int FSymTab$$Base;
     extern const int FSymTab$$Limit;
-    init_fsm(search_msg_map, &this.tshell.fsmSearchMsgMap, args((msg_t *)&FSymTab$$Base, (msg_t *)&FSymTab$$Limit, &this.tshell.tGetByte, true));
+    init_fsm(search_msg_map, &ptObj->fsmSearchMsgMap, args((msg_t *)&FSymTab$$Base, (msg_t *)&FSymTab$$Limit, &ptObj->tGetByte, true));
     #elif defined (__GNUC__) || defined(__TI_COMPILER_VERSION__) || defined(__TASKING__)
     /* GNU GCC Compiler and TI CCS */
     extern const int __fsymtab_start;
     extern const int __fsymtab_end;
-    init_fsm(search_msg_map, &this.tshell.fsmSearchMsgMap, args((msg_t *)&__fsymtab_start, (msg_t *)&__fsymtab_end, &this.tshell.tGetByte, true));
+    init_fsm(search_msg_map, &ptObj->fsmSearchMsgMap, args((msg_t *)&__fsymtab_start, (msg_t *)&__fsymtab_end, &ptObj->tGetByte, true));
     #elif defined(__ADSPBLACKFIN__) /* for VisualDSP++ Compiler */
-    init_fsm(search_msg_map, &this.tshell.fsmSearchMsgMap, args((msg_t *)&__fsymtab_start, (msg_t *)&__fsymtab_end, &this.tshell.tGetByte, true));
+    init_fsm(search_msg_map, &ptObj->fsmSearchMsgMap, args((msg_t *)&__fsymtab_start, (msg_t *)&__fsymtab_end, &ptObj->tGetByte, true));
     #elif defined(_MSC_VER)
     unsigned int *ptr_begin, *ptr_end;
     ptr_begin = (unsigned int *)&__fsym_begin;
@@ -256,15 +243,30 @@ check_shell_t *shell_init(check_shell_t *ptObj, shell_ops_t *ptOps)
     init_fsm(search_msg_map, &this.fsmSearchMsgMap, args((msg_t *)ptr_begin, (msg_t *)ptr_end, &this.tByteInQueue, true));
     #endif
 
-    shell_console_set(&this.tshell);
+    shell_console_set(ptObj);
     shell_printf("\r\nkk@shell >");
     return ptObj;
 }
 
-
-static void shell_push_history(wl_shell_t *ptObj)
+check_agent_shell_t *shell_agent_init(check_agent_shell_t *ptObj, shell_ops_t *ptOps)
 {
-    wl_shell_t *(ptThis) = ptObj;
+    check_agent_shell_t *(ptThis) = ptObj;
+    assert(NULL != ptOps);
+    assert(NULL != ptObj);
+    this.tCheckAgent.pAgent = &this.tshell;
+    this.tCheckAgent.fnCheck = (check_hanlder_t *)micro_shell_exec;
+    this.tCheckAgent.ptNext = NULL;
+    this.tCheckAgent.hwPeekStatus = 0;
+    this.tCheckAgent.bIsKeepingContext = true;
+
+    shell_init(&this.tshell,ptOps);
+    return ptObj;
+}
+
+
+static void shell_push_history(micro_shell_t *ptObj)
+{
+    micro_shell_t *(ptThis) = ptObj;
 
     if (this.hwLinePosition != 0) {
         /* push history */

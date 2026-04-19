@@ -25,15 +25,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* example:
-  //连接信号与槽
+/* 
   #define connect(__SIG_OBJ,__SIG_NAME,__SLOT_OBJ,__SLOT_FUN)    \
             direct_connect(__SIG_OBJ.tObject,__SIG_NAME,__SLOT_OBJ,__SLOT_FUN)
   example：
   connect(&tCanMsgObj,SIGNAL(can_sig),&s_tFIFOin,SLOT(enqueue_bytes));
 
-
-  //定义信号
   signals(__NAME,__OBJ,...)
   example：
   signals(can_sig,can_data_msg_t *ptThis,
@@ -41,7 +38,7 @@
             uint8_t *pchByte,
             uint16_t hwLen
           ));
-  //发送信号
+
    emit(__NAME,__OBJ,...)
    example：
    emit(can_sig,&tCanMsgObj,
@@ -50,20 +47,10 @@
             tCanMsgObj.CanDLC
          ));
 
-  //发送信号的对象需要继承信号与槽
-  SIG_SLOT_OBJ
 
-  //定义槽
-   slots(__NAME,__OBJ,...) (非必须，普通函数即可)
-   example：
-   slots(enqueue_bytes,byte_queue_t *ptObj,
-      args(
-            void *pchByte,
-            uint16_t hwLength
-         ));
 */
 
-#define SIG_NAME_MAX 20
+#define SIG_NAME_MAX 32
 
 #define SIGNAL(x) "sig_"#x
 

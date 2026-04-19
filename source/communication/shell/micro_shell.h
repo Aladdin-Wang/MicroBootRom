@@ -83,10 +83,10 @@ static inline void __set_mstatus(uint32_t mstatus) {
 #endif
 #endif		
 
-typedef struct wl_shell_t wl_shell_t;		
+typedef struct micro_shell_t micro_shell_t;		
 /* Callback type definitions for various shell operations */
-typedef uint16_t (shell_write_call_back)(wl_shell_t *ptObj, const char* pchBuffer, uint16_t hwSize);
-typedef uint16_t (shell_read_call_back)(wl_shell_t *ptObj,  char* pchBuffer, uint16_t hwSize);
+typedef uint16_t (shell_write_call_back)(micro_shell_t *ptObj, const char* pchBuffer, uint16_t hwSize);
+typedef uint16_t (shell_read_call_back)(micro_shell_t *ptObj,  char* pchBuffer, uint16_t hwSize);
 /* virtual function table for encapsulating shell operation functions */
 typedef struct shell_ops_t {
     shell_read_call_back           *fnReadData; /* Callback for reading data */
@@ -100,7 +100,7 @@ typedef struct shell_read_timeout_t {
     int64_t lTimeCountms;
 } shell_read_timeout_t;
 
-typedef struct wl_shell_t {
+typedef struct micro_shell_t {
     uint8_t                   chState;
     fsm(search_msg_map)       fsmSearchMsgMap;
     byte_queue_t              tByteInQueue;		
@@ -118,14 +118,14 @@ typedef struct wl_shell_t {
     char                      chReadLineBuf[MSG_ARG_LEN];
     char                      chWriteLineBuf[MSG_ARG_LEN];	
     char                      cHistoryCmdBuf[SHELL_HISTORY_LINES][MSG_ARG_LEN];
-} wl_shell_t;
+} micro_shell_t;
 
-typedef struct check_shell_t {
+typedef struct check_agent_shell_t {
     check_agent_t tCheckAgent;
-    wl_shell_t    tshell;
-} check_shell_t;
+    micro_shell_t    tshell;
+} check_agent_shell_t;
 
-static inline uint16_t __shell_read_data_timeout(wl_shell_t *ptObj, char* pchByte, uint16_t hwSize)
+static inline uint16_t __shell_read_data_timeout(micro_shell_t *ptObj, char* pchByte, uint16_t hwSize)
 {
     if(*ptObj->tOps.fnReadData == NULL){
         return 0;
@@ -133,17 +133,17 @@ static inline uint16_t __shell_read_data_timeout(wl_shell_t *ptObj, char* pchByt
     return (*ptObj->tOps.fnReadData)(ptObj, pchByte, hwSize);
 }
 
-static inline uint16_t __shell_write_data(wl_shell_t *ptObj, const char* pchByte, uint16_t hwSize)
+static inline uint16_t __shell_write_data(micro_shell_t *ptObj, const char* pchByte, uint16_t hwSize)
 {
     if(*ptObj->tOps.fnWriteData == NULL){
         return 0;
     }	
     return (*ptObj->tOps.fnWriteData)(ptObj, pchByte, hwSize);
 }
-
-extern check_shell_t *shell_init(check_shell_t *ptObj, shell_ops_t *ptOps);
-extern wl_shell_t *shell_console_get(void);
-extern void shell_console_set(wl_shell_t *ptConsoleShell);
+extern micro_shell_t *shell_init(micro_shell_t *ptObj, shell_ops_t *ptOps);
+extern check_agent_shell_t *shell_agent_init(check_agent_shell_t *ptObj, shell_ops_t *ptOps);
+extern micro_shell_t *shell_console_get(void);
+extern void shell_console_set(micro_shell_t *ptConsoleShell);
 extern void shell_printf(const char *format, ...);
-
+extern fsm_rt_t micro_shell_exec(micro_shell_t *ptObj);
 #endif /* APPLICATIONS_CHECK_AGENT_XMODEM_H_ */
