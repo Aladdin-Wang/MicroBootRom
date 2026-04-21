@@ -250,8 +250,6 @@ bool user_enter_bootloader(void)
     return false;
 }
 
-
-
 /**
  * @brief Entry point for application mode.
  * 
@@ -277,13 +275,13 @@ static void enter_application(void)
         // Read the magic values from flash memory to determine the next action
         target_flash_read((APP_PART_ADDR + APP_PART_SIZE - 3 * MARK_SIZE), chBootMagic[0], 3 * MARK_SIZE);
 
-        // Check if Magic3 is 0x55, indicating to read user data from a specific location
+        // Check if Magic3 is 0X55555555, indicating to read user data from a specific location
         if ((0X55555555 == *(uint32_t *)&chBootMagic[2]) || (0 == *(uint32_t *)&chBootMagic[2])) {
             target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - USER_DATA_SIZE), tUserMagicData.msg_data.B, USER_DATA_SIZE);
             break;
         }
 
-        // Check if Magic2 is 0x00 and Magic1 is 0xFFFFFFFF, indicating to read user data from a different location
+        // Check if Magic2 is 0X55555555,Magic1 is !0X55555555, indicating to read user data from a specific location
         if ((0X55555555 == *(uint32_t *)&chBootMagic[1]) && (0X55555555 != *(uint32_t *)&chBootMagic[0])) {
             target_flash_read((APP_PART_ADDR + APP_PART_SIZE - (3 * MARK_SIZE) - 2 * USER_DATA_SIZE), tUserMagicData.msg_data.B, USER_DATA_SIZE);
             break;
@@ -292,14 +290,18 @@ static void enter_application(void)
         //Check if the value at the address (APP_PART_ADDR + 4) has the expected application identifier
         uint32_t wValue = 0;
         target_flash_read((APP_PART_ADDR + APP_PART_OFFSET), (uint8_t *)&wValue, 4);
-        if ((wValue) == (0xffffffff) || (wValue) == (0) ) {
-            break;
-        }
         target_flash_uninit(APP_PART_ADDR);		
         // If all checks are passed, modify the stack pointer and start the application
         #ifdef __riscv
+        if ((wValue) == (0xffffffff) || (wValue) == (0) ) {
+            break;
+        }		
         modify_stack_pointer_and_start_app((APP_PART_ADDR + APP_PART_OFFSET));
         #else
+        // Check if the value at the address (APP_PART_ADDR + 4) has the expected application identifier
+        if ((wValue & 0xff000000) != (APP_PART_ADDR & 0xff000000)) {
+            break;
+        }		
         modify_stack_pointer_and_start_app(*(volatile uint32_t *)APP_PART_ADDR,
                                            (*(volatile uint32_t *)(APP_PART_ADDR + APP_PART_OFFSET)));
         #endif
