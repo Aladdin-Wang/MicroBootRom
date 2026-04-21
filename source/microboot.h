@@ -11,7 +11,7 @@ extern "C" {
 #include "communication/shell/micro_shell.h"
 #include "communication/subscribe_publish/subscribe_publish.h"
 #include "generic/timer/multiple_delay.h"
-
+#include "communication/ymodem/ymodem.h"
 #ifdef __cplusplus
 }
 #endif
