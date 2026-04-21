@@ -5,3 +5,7 @@
 文档介绍：
 
 https://microboot.readthedocs.io/zh-cn/latest/
+
+参考例程：
+
+https://github.com/Aladdin-Wang/MicroBoot_Demo
