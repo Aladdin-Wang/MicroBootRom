@@ -1,5 +1,5 @@
-#ifndef __FLASH_PORT_DEFAULT_H__
-#define __FLASH_PORT_DEFAULT_H__
+#ifndef __ATOM_CODE_PORT_H__
+#define __ATOM_CODE_PORT_H__
 #include "cmsis_compiler.h"	
 
 #undef __CONNECT2

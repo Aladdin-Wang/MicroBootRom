@@ -8,10 +8,9 @@ extern "C" {
 
 #include "bootloader/bootloader.h"
 #include "check_agent_engine/check_agent_engine.h"
-#include "flash_algo/flash_algo.h"
 #include "communication/shell/micro_shell.h"
-#include "communication/ymodem/ymodem.h"
-
+#include "communication/subscribe_publish/subscribe_publish.h"
+#include "generic/timer/multiple_delay.h"
 
 #ifdef __cplusplus
 }
