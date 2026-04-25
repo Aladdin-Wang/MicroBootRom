@@ -827,7 +827,12 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
                     /* Non-C character received; remain in current state */
                     return STATE_INCORRECT_CHAR;
                 }
-            } else {
+            } else if(STATE_TIMEOUT == tFsm) {
+                /* ACK waiting period timed out; reset state machine */
+                YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                YMODEM_RECEIVE_RESET_FSM();
+                return STATE_TIMEOUT;
+            }  else {
                 /* Read in progress or other error; remain in current state */
                 break;
             }
@@ -1041,7 +1046,7 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
          * for the next step of termination sequence.
          */
         case RECEIVE_NAK: {
-            ymodem_state_t tFsm = ymodem_read_data_with_timeout(&this.tReadDataTimeout, &this.chByte, 1, DLY_10S);
+            ymodem_state_t tFsm = ymodem_read_data_with_timeout(&this.tReadDataTimeout, &this.chByte, 1, DLY_1S);
 
             if(STATE_PACKET_CPL == tFsm) {
                 /* Check if the byte received is a NAK */
@@ -1083,7 +1088,7 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
          * which would indicate that the transmission has been successfully terminated.
          */
         case RECEIVE_ACK2: {
-            ymodem_state_t tFsm = ymodem_read_data_with_timeout(&this.tReadDataTimeout, &this.chByte, 1, DLY_10S);
+            ymodem_state_t tFsm = ymodem_read_data_with_timeout(&this.tReadDataTimeout, &this.chByte, 1, DLY_1S);
 
             if(STATE_PACKET_CPL == tFsm) {
                 /* Check if the byte received is an ACK */

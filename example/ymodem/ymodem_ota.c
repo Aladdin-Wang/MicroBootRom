@@ -73,7 +73,6 @@ static uint16_t ymodem_recv_file_data(ymodem_t *ptObj, uint8_t *pchBuffer, uint1
 
     if(this.wOffSet == this.wFileSize) {
         finalize_download();			
-        printf("Download firmware to flash success.\n");
     }
     
     return hwSize;
