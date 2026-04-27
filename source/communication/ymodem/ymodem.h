@@ -75,7 +75,12 @@ typedef struct ymodem_read_timeout_t {
     uint16_t hwIndex;
     int64_t lTimeCountms;
 } ymodem_read_timeout_t;
-
+/* Struct for holding YMODEM incorrect char read data  */
+typedef struct ymodem_stat_incorrect_char_timeout_t {
+    uint8_t  chState;
+    uint8_t chYmodemState;
+    int64_t lTimeCountms;
+} ymodem_stat_incorrect_char_timeout_t;
 /* Struct for holding YMODEM package state information */
 typedef struct ymodem_package_t {
     uint8_t chState; /* Current state of the package reception/transmission */
@@ -97,6 +102,7 @@ typedef struct ymodem_t {
     ymodem_ops_t tOps; /* virtual function for YMODEM operations */
     ymodem_package_t tPackage; /* Package related information */
     ymodem_read_timeout_t tReadDataTimeout;
+    ymodem_stat_incorrect_char_timeout_t tReadIncorrectTimeout;
 } ymodem_t;
 
 static inline uint16_t __ymodem_read_data_timeout(ymodem_t *ptObj, uint8_t* pchByte, uint16_t hwSize)

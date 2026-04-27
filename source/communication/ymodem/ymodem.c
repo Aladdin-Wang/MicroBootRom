@@ -172,6 +172,45 @@ static ymodem_state_t ymodem_read_data_with_timeout(ymodem_read_timeout_t *ptThi
     return STATE_ON_GOING;
 }
 
+static ymodem_state_t  ymodem_stat_incorrect_char_timeout(ymodem_stat_incorrect_char_timeout_t  *ptThis, uint8_t chYmodemState,uint16_t hwTimeout)
+{
+    /* Macro to reset the finite state machine (FSM) */
+#define YMODEM_STATE_INCORRECT_TIMEOUT_RESET_FSM() do { this.chState = 0; } while(0)
+    ymodem_t *ptObj = container_of(ptThis, ymodem_t, tReadDataTimeout);
+    /* Enum defining FSM states for receiving a Ymodem packet */
+    enum { START, READ_DOING, IS_TIMEOUT, RESET_TIME};
+
+    /* Processing states using a switch-case statement */
+    switch(this.chState) {
+        case START: {
+            this.lTimeCountms = hwTimeout + get_system_time_ms();
+            this.chYmodemState = chYmodemState;
+            /* Begin the process of reading a new packet by transitioning to the data state. */
+            this.chState = READ_DOING;
+        }
+
+        case READ_DOING: {
+            if(this.chYmodemState != chYmodemState) {
+                YMODEM_READ_DATA_TIMEOUT_RESET_FSM();
+                return STATE_PACKET_CPL;
+            } 
+            this.chState = IS_TIMEOUT;
+        }
+
+        case IS_TIMEOUT: {
+            if(get_system_time_ms() >= this.lTimeCountms) {
+                YMODEM_STATE_INCORRECT_TIMEOUT_RESET_FSM();
+                return STATE_TIMEOUT;
+            }
+
+            this.chState = READ_DOING;
+            break;
+        }
+    }
+
+    /* Return the ongoing status if the packet isn't yet fully processed or an error hasn't occurred. */
+    return STATE_ON_GOING;
+}
 
 /**
  * @brief Receives and processes a Ymodem packet based on the current state and the data read.
@@ -511,7 +550,13 @@ ymodem_state_t ymodem_receive(ymodem_t *ptThis)
                     break;
 
                 case STATE_INCORRECT_CHAR:
-                    return STATE_INCORRECT_CHAR;
+					if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
 
                 case STATE_INCORRECT_NBlk:
 					return STATE_INCORRECT_NBlk;
@@ -593,7 +638,13 @@ ymodem_state_t ymodem_receive(ymodem_t *ptThis)
                     this.chState = ANSWER_ACK;
                 } else {
                     /* If the received byte is not EOT, remain in this state to retry. */
-                    return STATE_INCORRECT_CHAR;
+                    if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
                 }
             } else if(STATE_TIMEOUT == tFsm) {
                 /* Timeout waiting for EOT signifies an error, reset FSM and report it. */
@@ -825,7 +876,13 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
                     }
                 } else {
                     /* Non-C character received; remain in current state */
-                    return STATE_INCORRECT_CHAR;
+                    if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
                 }
             } else if(STATE_TIMEOUT == tFsm) {
                 /* ACK waiting period timed out; reset state machine */
@@ -878,7 +935,13 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
                     }
                 } else {
                     /* Non-ACK character received; remain in current state */
-                    return STATE_INCORRECT_CHAR;
+                    if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
                 }
             } else if(STATE_TIMEOUT == tFsm) {
                 /* ACK waiting period timed out; reset state machine */
@@ -923,7 +986,13 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
 
                 } else {
                     /* No 'C' received, remain in current state */
-                    return STATE_INCORRECT_CHAR;
+                    if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
                 }
             } else if(STATE_TIMEOUT == tFsm) {
                 /* Timeout elapsed while waiting for 'C', reset FSM and return error */
@@ -1012,7 +1081,13 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
                     return STATE_CAN;
                 } else {
                     /* Received an unexpected response, stay in the current state */
-                    return STATE_INCORRECT_CHAR;
+                    if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
                 }
             } else if(STATE_TIMEOUT == tFsm) {
                 /* Timed out waiting for receiver's response, reset FSM and return error */
@@ -1055,7 +1130,13 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
                     this.chState = SEND_EOT2;
                 } else {
                     /* If the response is not NAK, remain in this state and retry */
-                    return STATE_INCORRECT_CHAR;
+                    if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
                 }
             } else if(STATE_TIMEOUT == tFsm) {
                 /* Timeout waiting for NAK, reset FSM to handle error */
@@ -1098,7 +1179,13 @@ ymodem_state_t ymodem_send(ymodem_t *ptThis)
                     break; // Return completion status
                 } else {
                     /* If the response is not ACK, remain in this state and wait */
-                    return STATE_INCORRECT_CHAR;
+                    if((ymodem_stat_incorrect_char_timeout(&this.tReadIncorrectTimeout,this.chState,DLY_10S)) == STATE_TIMEOUT){
+                        YMODEM_HANDLER(STATE_TIMEOUT,"read timeout");
+                        YMODEM_RECEIVE_RESET_FSM();
+                        return STATE_TIMEOUT;
+                    }else{
+                        return STATE_INCORRECT_CHAR;
+                    }
                 }
             } else if(STATE_TIMEOUT == tFsm) {
                 /* Timeout waiting for ACK, reset FSM to handle error */
